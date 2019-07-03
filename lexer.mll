@@ -8,7 +8,6 @@ let digit = ['0'-'9']
 let lower = ['a'-'z']
 let upper = ['A'-'Z']
 
-
 rule token = parse
 | [' ' '\t' '\n' ]+ { token lexbuf }
 | ',' { COMMA }
@@ -18,10 +17,10 @@ rule token = parse
 | "impE" { IMPE }
 | "fun" { FUN }
 | "assume" { ASSUME }
-| lower (digit|lower|upper|'_')* { Var (Lexing.lexeme lexbuf) }
+| lower (digit|lower|upper|'_')* { VAR (Lexing.lexeme lexbuf) }
 | eof { EOF }
 | _
-    { raise (Lexing_failed (Printf.sprintf "At offset %d: unexpected character.\n" (Lexing.lexeme_start))) }
+    { raise (Lexing_failed (Printf.sprintf "At offset %d: unexpected character.\n" (Lexing.lexeme_start lexbuf))) }
 
 {
 

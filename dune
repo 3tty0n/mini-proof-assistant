@@ -1,5 +1,12 @@
-(ocamlyacc (modules parser))
 (ocamllex (modules lexer))
+(ocamlyacc (modules parser))
+
+(library
+ (name proof)
+ (modules (:standard \ main))
+ (preprocess (pps ppx_deriving.show)))
 
 (executable
- (name main))
+ (name main)
+ (modules main)
+ (libraries proof))
