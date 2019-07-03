@@ -21,13 +21,13 @@ program:
 ;
 expr:
   | VAR
-    { Var ($1) }
+    { Var $1 }
   | FUN LPAREN expr COMMA expr RPAREN
     { Fun ($3, $5) }
   | IMPI LPAREN expr COMMA expr RPAREN
     { ImpI ($3, $5) }
   | IMPE LPAREN expr COMMA expr RPAREN
     { ImpE ($3, $5) }
-  | ASSUME LPAREN expr COMMA  expr RPAREN
+  | ASSUME LPAREN expr COMMA expr RPAREN
     { Assume ($3, $5) }
 ;

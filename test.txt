@@ -1,0 +1,1 @@
+impI(x,impI(y,impE(assume(y,fun(a,b)),assume(x,a))))

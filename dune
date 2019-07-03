@@ -2,11 +2,12 @@
 (ocamlyacc (modules parser))
 
 (library
- (name proof)
+ (name proof_assist)
  (modules (:standard \ main))
  (preprocess (pps ppx_deriving.show)))
 
 (executable
  (name main)
+ (public_name main)
  (modules main)
- (libraries proof))
+ (libraries proof_assist))
