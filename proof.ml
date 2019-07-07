@@ -82,7 +82,6 @@ let rec eval env = function
      assert (
          let x = lookup t1 env in
          let y = lookup t2 env in
-         eprintf "x: %s, y: %s\n" (string_of_t x) (string_of_t y);
          match x with
          | Fun (a, _) -> a = y || raise @@ ImpE_failed (sprintf "ImpE %s %s cannot be allowed." (string_of_t x) (string_of_t y))
          | _ -> raise @@ ImpE_failed "something went wrong.");
