@@ -1,7 +1,10 @@
 open Proof_assist
 
 let print_result (x, y) =
-  print_string (Proof.string_of_t x); print_string " : "; print_string (Proof.string_of_typ y);
+  let x, y = Proof.string_of_t x, Proof.string_of_typ y in
+  print_endline y;
+  print_endline "because";
+  print_string x; print_string " : "; print_string y;
   print_newline ()
 
 let test1 () =
