@@ -3,22 +3,22 @@ open Printf
 type name = string
 
 type typ =
-  V of string
-| F of typ * typ
+  | V of string
+  | F of typ * typ
 
 let rec string_of_typ = function
-    V s -> sprintf "%s" s
+  | V s -> sprintf "%s" s
   | F (t1, t2) -> sprintf "(%s -> %s)" (string_of_typ t1) (string_of_typ t2)
 
 type t =
-  Var of name
-| Assign of name * t
-| Lambda of t * t * t
-| Fun of t * t
-| App of t * t
+  | Var of name
+  | Assign of name * t
+  | Lambda of t * t * t
+  | Fun of t * t
+  | App of t * t
 
 let rec string_of_t = function
-    Var s -> s
+  | Var s -> s
   | Assign (s, t) -> sprintf "Assign (%s, %s)" s (string_of_t t)
   | Lambda (t1, t2, t3) -> sprintf "λ%s:%s . %s" (string_of_t t1) (string_of_t t2) (string_of_t t3)
   | Fun (t1, t2) -> sprintf "(%s -> %s)" (string_of_t t1) (string_of_t t2)
@@ -38,11 +38,6 @@ let lookup x env =
   try List.assoc x env
   with Not_found -> raise Not_bound
 
-(* (a -> b), a => b *)
-let apply_fun t1 t2 env =
-  match t1, t2 with
-  | Fun (Var(a), b), Var(a') when a = a' -> b, env
-  | _ -> assert false
 
 let rec resolve id t = match t with
   | Term.Var (_) -> None
@@ -53,6 +48,8 @@ let rec resolve id t = match t with
        Some v -> Some v
      | None -> resolve id y
      end
+
+exception ImpE_failed of string
 
 let rec eval env = function
   | Term.Var name ->
@@ -82,6 +79,13 @@ let rec eval env = function
   | Term.ImpE (t1, t2) ->
      let t1, _, env = eval env t1 in
      let t2, typ2, env = eval env t2 in
+     assert (
+         let x = lookup t1 env in
+         let y = lookup t2 env in
+         eprintf "x: %s, y: %s\n" (string_of_t x) (string_of_t y);
+         match x with
+         | Fun (a, _) -> a = y || raise @@ ImpE_failed (sprintf "ImpE %s %s cannot be allowed." (string_of_t x) (string_of_t y))
+         | _ -> raise @@ ImpE_failed "something went wrong.");
      App (t1, t2), typ2, env
 
 let f t =
